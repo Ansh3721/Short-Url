@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="text-center mb-4">
+                    <h1 class="display-5 fw-bold">URL Shortener</h1>
+                    <p class="text-body-secondary">Create and manage your shortened URLs.</p>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <form action="/url" method="POST">
+                            <label for="url" class="form-label fw-semibold">Enter your URL</label>
+                            <div class="input-group">
+                                <input id="url" name="url" type="url" class="form-control"
+                                    placeholder="https://example.com" required>
+                                <button type="submit" class="btn btn-primary">Shorten URL</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <% if(locals.urls){ %>
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h2 class="h4 mb-3">All Shortened URLs</h2>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Short URL</th>
+                                            <th scope="col">Original URL</th>
+                                            <th scope="col">Clicks</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% locals.urls.forEach((item, index) => { %>
+                                            <tr>
+                                                <td><%= index + 1 %></td>
+                                                <td>
+                                                    <a href="/url/<%= item.shortId %>" class="link-primary text-decoration-none">
+                                                        <%= item.shortId %>
+                                                    </a>
+                                                </td>
+                                                <td class="text-break"><%= item.redirectUrl %></td>
+                                                <td><span class="badge text-bg-secondary"><%= item.visitHistory.length %></span></td>
+                                                <td>
+                                                    <form action="/url/<%= item.shortId %>/delete" method="POST">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

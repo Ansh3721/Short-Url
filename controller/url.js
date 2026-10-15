@@ -3,7 +3,6 @@ const URL = require('../models/url');
 
 async function generateUrlHandler(req, res){
     const body = req.body;
-    console.log(body);
     if(!body.url){
         return res.status(400).json({error : "url is required"});
     }
@@ -11,7 +10,11 @@ async function generateUrlHandler(req, res){
         redirectUrl : body.url,
     });
     if(existing){
-        return res.json({id : existing.shortId});
+        const allurls = await URL.find({});
+        return res.render("home", {
+            id : existing.shortId,
+            urls : allurls,
+        });
     }
     const shortId = nanoid(8);
     await URL.create({
@@ -20,7 +23,11 @@ async function generateUrlHandler(req, res){
         visitHistory : [],
     })
 
-    res.json({id : shortId});
+    const allurls = await URL.find({});
+    return res.render("home", {
+        id : shortId,
+        urls : allurls,
+    })
 }
 
 async function handleRedirect(req, res){
@@ -56,4 +63,15 @@ async function handlegetAnalytics(req, res){
     });
 }
 
-module.exports = {generateUrlHandler, handleRedirect, handlegetAnalytics};
+async function handleDelete(req, res){
+    const shortId = req.params.shortId;
+    const entry = await URL.findOneAndDelete({
+        shortId,
+    });
+    if(!entry){
+        return res.status(404).json({error : "URL not found"});
+    }
+    res.redirect("/");
+}
+
+module.exports = {generateUrlHandler, handleRedirect, handlegetAnalytics,handleDelete};
