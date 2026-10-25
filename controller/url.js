@@ -10,7 +10,7 @@ async function generateUrlHandler(req, res){
         redirectUrl : body.url,
     });
     if(existing){
-        const allurls = await URL.find({});
+        const allurls = await URL.find({createdBy : req.user._id});
         return res.render("home", {
             id : existing.shortId,
             urls : allurls,
@@ -21,6 +21,7 @@ async function generateUrlHandler(req, res){
         shortId : shortId,
         redirectUrl : req.body.url,
         visitHistory : [],
+        createdBy : req.user._id,
     })
 
     const allurls = await URL.find({});
