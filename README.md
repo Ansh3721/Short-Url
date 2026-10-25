@@ -72,11 +72,28 @@ Start the server:
 npm start
 ```
 
+For development with automatic restarts:
+
+```bash
+npm run dev
+```
+
 The app will run on:
 
 ```bash
 http://localhost:3000
 ```
+
+## Deploy with Vercel
+
+Add `MONGO_URL` as a Vercel project environment variable for the Production
+environment. Use the new MongoDB Atlas connection string after rotating any
+credential that has been exposed. Also add Vercel's outbound access in the
+Atlas network access configuration (for development, `0.0.0.0/0` can be used
+only with a strong database password and least-privilege database user).
+
+After adding or changing the variable, redeploy the project. Do not commit
+`.env`; it is ignored by Git and is only for local development.
 
 ## API Endpoints
 
